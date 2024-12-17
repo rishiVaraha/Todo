@@ -36,28 +36,58 @@ export type Database = {
     Tables: {
       todos: {
         Row: {
+          completed: boolean | null;
+          created_at: string | null;
           id: number;
-          inserted_at: string;
-          is_complete: boolean | null;
-          role: string;
-          task: string | null;
+          title: string;
+          updated_at: string | null;
           user_id: string;
         };
         Insert: {
+          completed?: boolean | null;
+          created_at?: string | null;
           id?: number;
-          inserted_at?: string;
-          is_complete?: boolean | null;
-          role: string;
-          task?: string | null;
+          title: string;
+          updated_at?: string | null;
           user_id: string;
         };
         Update: {
+          completed?: boolean | null;
+          created_at?: string | null;
           id?: number;
-          inserted_at?: string;
-          is_complete?: boolean | null;
-          role?: string;
-          task?: string | null;
+          title?: string;
+          updated_at?: string | null;
           user_id?: string;
+        };
+        Relationships: [];
+      };
+      users: {
+        Row: {
+          avatar_url: string;
+          created_at: string | null;
+          email: string;
+          id: string;
+          is_away: boolean;
+          name: string | null;
+          role: string | null;
+        };
+        Insert: {
+          avatar_url: string;
+          created_at?: string | null;
+          email: string;
+          id: string;
+          is_away?: boolean;
+          name?: string | null;
+          role?: string | null;
+        };
+        Update: {
+          avatar_url?: string;
+          created_at?: string | null;
+          email?: string;
+          id?: string;
+          is_away?: boolean;
+          name?: string | null;
+          role?: string | null;
         };
         Relationships: [];
       };
