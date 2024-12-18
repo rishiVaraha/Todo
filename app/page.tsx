@@ -22,7 +22,6 @@ export default async function Page() {
   if (error || !data?.user) {
     redirect("/login");
   }
-
   return (
     <SidebarProvider>
       <AppSidebar />

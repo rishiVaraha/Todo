@@ -9,14 +9,9 @@ import { redirect } from "next/navigation";
 export default function TodosPage() {
   // const supabase = await createClient();
   const { user, userRole, isLoading } = useAuth();
-  // const {
-  //   data: { user },
-  // } = await supabase.auth.getUser();
-
-  // if (!user) {
-  //   return redirect("/login");
-  // }
-
+  if (!user) {
+    return redirect("/login");
+  }
   // const { data: todos } = await supabase
   //   .from("todos")
   //   .select()
