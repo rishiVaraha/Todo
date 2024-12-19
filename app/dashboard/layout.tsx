@@ -1,20 +1,14 @@
 import { FC, ReactNode } from "react";
 import { AuthProvider } from "@/context/userContext";
 import { AppSidebar } from "@/components/sideMenu/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+
+import { Navheader } from "@/components/breadcrumb";
 const DashboardLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <AuthProvider>
@@ -25,20 +19,8 @@ const DashboardLayout: FC<{ children: ReactNode }> = ({ children }) => {
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">
-                      Building Your Application
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
             </div>
+            <Navheader />
           </header>
           {children}
         </SidebarInset>

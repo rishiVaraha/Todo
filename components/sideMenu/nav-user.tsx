@@ -20,7 +20,7 @@ import { Button } from "../ui/button";
 
 export function NavUser({ user }: { user: any }) {
   const { isMobile } = useSidebar();
-  console.log(user);
+  // console.log(user);
   return (
     <SidebarMenu>
       <SidebarMenuItem>

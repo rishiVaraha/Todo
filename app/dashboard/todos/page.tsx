@@ -1,9 +1,9 @@
-"use client";
-
-import React from "react";
-
 const TodoPage = () => {
-  return <div>Todo</div>;
+  return (
+    <div className="h-screen w-full flex justify-center items-center">
+      <h1>Todo page</h1>
+    </div>
+  );
 };
 
 export default TodoPage;
