@@ -1,66 +1,47 @@
-"use client";
-import { deleteTodo, updateTodo } from "@/app/todos/action";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
-import { Todo } from "@/types/custom";
 import { Trash2 } from "lucide-react";
-import { useFormStatus } from "react-dom";
-import { TodoOptimisticUpdate } from "./todo-list";
-import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
+import { Todo } from "@/types/custom";
 
-export function TodoItem({
-  todo,
-  optimisticUpdate,
-}: {
-  todo: Todo;
-  optimisticUpdate: TodoOptimisticUpdate;
-}) {
-  return (
-    <form>
-      <TodoCard optimisticUpdate={optimisticUpdate} todo={todo} />
-    </form>
-  );
-}
+export function TodoItems({ userID }: { userID: any }) {
+  const supabase = createClient();
+  const [todos, setTodos] = useState<Todo[]>([]);
 
-export function TodoCard({
-  todo,
-  optimisticUpdate,
-}: {
-  todo: Todo;
-  optimisticUpdate: TodoOptimisticUpdate;
-}) {
-  const { pending } = useFormStatus();
-  const [checked, setChecked] = useState(todo.is_complete);
+  useEffect(() => {
+    const fetchTodos = async () => {
+      const { data, error } = await supabase
+        .from("todos")
+        .select("*")
+        .eq("user_id", userID);
+
+      if (error) {
+        console.error("Error fetching todos:", error);
+      } else {
+        setTodos(data);
+      }
+    };
+
+    fetchTodos();
+  }, [supabase, userID]);
+
   return (
-    <Card className={cn("w-full", pending && "opacity-50")}>
-      <CardContent className="flex items-start gap-3 p-3">
-        <span className="size-10 flex items-center justify-center">
-          <Checkbox
-            disabled={pending}
-            checked={Boolean(checked)}
-            onCheckedChange={async (val) => {
-              if (val === "indeterminate") return;
-              setChecked(val);
-              await updateTodo({ ...todo, is_complete: val });
-            }}
-          />
-        </span>
-        <p className={cn("flex-1 pt-2 min-w-0 break-words")}>{todo.task}</p>
-        <Button
-          disabled={pending}
-          formAction={async (data) => {
-            optimisticUpdate({ action: "delete", todo });
-            await deleteTodo(todo.id);
-          }}
-          variant="ghost"
-          size="icon"
-        >
-          <Trash2 className="h-5 w-5" />
-          <span className="sr-only">Delete Todo</span>
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="grid gap-4">
+      {todos?.map((todo) => (
+        <Card key={todo.id}>
+          <CardContent className="flex p-0 items-center justify-between">
+            <div className="flex p-4 items-center justify-center gap-4">
+              <Checkbox checked={todo.completed ?? false} />
+              <span className="font-semibold">{todo.title}</span>
+            </div>
+            <Button size="sm" variant="destructive" className="mr-4">
+              <Trash2 className="size-4" />
+            </Button>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
   );
 }

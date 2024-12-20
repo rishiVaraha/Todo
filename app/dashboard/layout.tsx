@@ -22,7 +22,7 @@ const DashboardLayout: FC<{ children: ReactNode }> = ({ children }) => {
             </div>
             <Navheader />
           </header>
-          {children}
+          <main>{children}</main>
         </SidebarInset>
       </SidebarProvider>
     </AuthProvider>

@@ -42,6 +42,7 @@ export type Database = {
           title: string;
           updated_at: string | null;
           user_id: string;
+          user_name: string | null;
         };
         Insert: {
           completed?: boolean | null;
