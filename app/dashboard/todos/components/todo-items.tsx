@@ -1,47 +1,53 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trash2 } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
 import { Todo } from "@/types/custom";
+import { Trash2 } from "lucide-react";
+import { deleteTodo, updateTodo } from "../action";
+import { cn } from "@/lib/utils";
 
-export function TodoItems({ userID }: { userID: any }) {
-  const supabase = createClient();
-  const [todos, setTodos] = useState<Todo[]>([]);
-
-  useEffect(() => {
-    const fetchTodos = async () => {
-      const { data, error } = await supabase
-        .from("todos")
-        .select("*")
-        .eq("user_id", userID);
-
-      if (error) {
-        console.error("Error fetching todos:", error);
-      } else {
-        setTodos(data);
-      }
-    };
-
-    fetchTodos();
-  }, [supabase, userID]);
-
+export function TodoItem({ todo }: { todo: Todo }) {
   return (
-    <div className="grid gap-4">
-      {todos?.map((todo) => (
-        <Card key={todo.id}>
-          <CardContent className="flex p-0 items-center justify-between">
-            <div className="flex p-4 items-center justify-center gap-4">
-              <Checkbox checked={todo.completed ?? false} />
-              <span className="font-semibold">{todo.title}</span>
-            </div>
-            <Button size="sm" variant="destructive" className="mr-4">
-              <Trash2 className="size-4" />
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <form>
+      <TodoCard todo={todo} />
+    </form>
+  );
+}
+
+export function TodoCard({ todo }: { todo: Todo }) {
+  return (
+    <Card>
+      <CardContent className="flex items-start gap-4 p-3">
+        <span className="flex items-center justify-center size-10">
+          <Checkbox
+            checked={Boolean(todo.completed)}
+            onCheckedChange={async (val) => {
+              if (val === "indeterminate") return;
+              await updateTodo(todo.id, { completed: val });
+            }}
+          />
+        </span>
+        <p
+          className={cn(
+            "flex-1 pt-2 min-w-0 break-words",
+            todo?.completed && "line-through text-gray-500 italic"
+          )}
+        >
+          {todo?.title}
+        </p>
+        <Button
+          formAction={async () => {
+            await deleteTodo(todo.id);
+          }}
+          variant="destructive"
+          size="icon"
+        >
+          <Trash2 className="h-5 w-5" />
+          <span className="sr-only">Delete Todo</span>
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

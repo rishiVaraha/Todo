@@ -1,17 +1,16 @@
-// import { createClient } from "@/utils/supabase/server";
+import { Todo } from "@/types/custom";
+import { TodoForm } from "./todo-form";
+import { TodoItem } from "./todo-items";
 
-// export async function TodoList() {
-//   const supabase = createClient();
-//   let { data: todos, error } = await supabase.from("todos").select();
-
-//   console.log(todos);
-//   return (
-//     <div>
-//       {todos?.map((todo) => (
-//         <div key={todo.id}>
-//           <p>{todo.title}</p>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
+export async function TodoList({ todos }: { todos: Todo[] }) {
+  return (
+    <>
+      <TodoForm />
+      <div className="w-full flex flex-col gap-4">
+        {todos.map((todo) => (
+          <TodoItem key={todo.id} todo={todo} />
+        ))}
+      </div>
+    </>
+  );
+}
