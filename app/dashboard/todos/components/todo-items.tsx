@@ -7,6 +7,7 @@ import { Todo } from "@/types/custom";
 import { Trash2 } from "lucide-react";
 import { deleteTodo, updateTodo } from "../action";
 import { cn } from "@/lib/utils";
+import { useFormStatus } from "react-dom";
 
 export function TodoItem({ todo }: { todo: Todo }) {
   return (
@@ -17,11 +18,13 @@ export function TodoItem({ todo }: { todo: Todo }) {
 }
 
 export function TodoCard({ todo }: { todo: Todo }) {
+  const { pending } = useFormStatus();
   return (
-    <Card>
+    <Card className={cn("w-full", pending && "opacity-50")}>
       <CardContent className="flex items-start gap-4 p-3">
         <span className="flex items-center justify-center size-10">
           <Checkbox
+            disabled={pending}
             checked={Boolean(todo.completed)}
             onCheckedChange={async (val) => {
               if (val === "indeterminate") return;
@@ -41,6 +44,7 @@ export function TodoCard({ todo }: { todo: Todo }) {
           formAction={async () => {
             await deleteTodo(todo.id);
           }}
+          disabled={pending}
           variant="destructive"
           size="icon"
         >

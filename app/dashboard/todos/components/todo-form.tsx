@@ -6,17 +6,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
 import { useRef } from "react";
 import { addTodo } from "../action";
+import { useFormStatus } from "react-dom";
 
 function FormContent() {
+  const { pending } = useFormStatus();
   return (
     <>
       <Textarea
+        disabled={pending}
         minLength={4}
         name="todo"
         required
         placeholder="Add a new todo"
       />
-      <Button type="submit" size="icon" className="min-w-10">
+      <Button type="submit" size="icon" className="min-w-10" disabled={pending}>
         <Send className="h-2 w-5" />
         <span className="sr-only">Submit Todo</span>
       </Button>
