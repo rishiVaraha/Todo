@@ -6,6 +6,7 @@ import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Button } from "@/components/ui/button";
+import { deleteTodo } from "../actions";
 
 export type UserTodo = {
   completed: boolean | null;
@@ -124,7 +125,7 @@ export const columns: ColumnDef<UserTodo>[] = [
           >
             <SquarePen />
           </Button>
-          <Button variant="ghost" onClick={() => console.log(row)}>
+          <Button variant="ghost" onClick={() => deleteTodo(row.original.id)}>
             <Trash2 />
           </Button>
         </div>
