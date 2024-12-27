@@ -1,12 +1,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, SquarePen, Trash2 } from "lucide-react";
-
+import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import { Button } from "@/components/ui/button";
-import { deleteTodo } from "../actions";
+import { EditDialog } from "@/components/editDialog";
+import { DeleteDialog } from "@/components/deleteAlret";
 
 export type UserTodo = {
   completed: boolean | null;
@@ -114,20 +113,16 @@ export const columns: ColumnDef<UserTodo>[] = [
 
   {
     id: "actions",
-    enableHiding: false,
+    header: () => <div className="text-right mr-5">actions</div>,
     cell: ({ row }) => {
       return (
-        <div className="flex items-center justify-end">
-          <Button
-            variant="ghost"
-            onClick={() => console.log(row)}
-            className="mr-2"
-          >
-            <SquarePen />
-          </Button>
-          <Button variant="ghost" onClick={() => deleteTodo(row.original.id)}>
-            <Trash2 />
-          </Button>
+        <div className="flex items-center  justify-end">
+          <EditDialog
+            id={row.original.id}
+            title={row.original.title}
+            completed={row.original.completed ?? false}
+          />
+          <DeleteDialog id={row.original.id} />
         </div>
       );
     },

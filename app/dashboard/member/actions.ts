@@ -13,3 +13,21 @@ export async function deleteTodo(id: number) {
 
   revalidatePath("/dashboard/member");
 }
+
+export async function updateTodo(
+  id: number,
+  title: string,
+  completed: boolean
+) {
+  const supabase = createClient();
+  console.log("Updating todo with id:", id);
+
+  const { error } = await supabase
+    .from("todos")
+    .update({ title, completed })
+    .eq("id", id);
+
+  if (error) throw new Error(`Error updating todo: ${error.message}`);
+
+  revalidatePath("/dashboard/member");
+}
