@@ -28,7 +28,7 @@ export function EditDialog({
   const [updatedTodo, setUpdatedTodo] = useState(title);
   const [isCompleted, setIsCompleted] = useState(completed);
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUpdatedTodo(e.target.value);
   };
 
@@ -40,9 +40,14 @@ export function EditDialog({
     try {
       await updateTodo(Number(id), updatedTodo, isCompleted);
       toast({ title: "Success", description: "Todo updated successfully!" });
-    } catch (error: any) {
-      console.error(error.message);
-      alert("Failed to update todo.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        toast({ title: "Error", description: error.message });
+      } else {
+        console.error("An unknown error occurred.");
+        toast({ title: "Error", description: "An unknown error occurred." });
+      }
     }
   };
 

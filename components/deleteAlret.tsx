@@ -12,8 +12,24 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
+import { toast } from "@/hooks/use-toast";
 
 export function DeleteDialog({ id }: { id: number }) {
+  const handleDelete = async () => {
+    try {
+      await deleteTodo(id as number);
+      toast({ title: "Success", description: "Todo Delete successfully!" });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+        toast({ title: "Error", description: error.message });
+      } else {
+        console.error("An unknown error occurred.");
+        toast({ title: "Error", description: "An unknown error occurred." });
+      }
+    }
+  };
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -31,9 +47,7 @@ export function DeleteDialog({ id }: { id: number }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => deleteTodo(id)}>
-            Continue
-          </AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
