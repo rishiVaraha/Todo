@@ -30,6 +30,7 @@ import Link from "next/link";
 
 const formSchema = z
   .object({
+    name: z.string().min(1, "Name is required"),
     email: z.string().email(),
   })
   .and(passwordMatchSchema);
@@ -42,6 +43,7 @@ export default function Register() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       passwordConfirm: "",
@@ -53,6 +55,7 @@ export default function Register() {
 
     try {
       const response = await registerUser({
+        full_name: data.name,
         email: data.email,
         password: data.password,
         passwordConfirm: data.passwordConfirm,
@@ -67,7 +70,7 @@ export default function Register() {
     } catch (error) {
       setServerError("An unexpected error occurred. Please try again.");
     } finally {
-      setIsLoading(false); // Set loading to false when submission ends
+      setIsLoading(false);
     }
   };
 
@@ -84,6 +87,20 @@ export default function Register() {
               onSubmit={form.handleSubmit(handleSubmit)}
               className="flex flex-col gap-2"
             >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="email"

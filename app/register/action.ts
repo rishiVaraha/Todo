@@ -2,17 +2,15 @@
 
 import { passwordMatchSchema } from "@/validation/passwordMatchSchema";
 import { z } from "zod";
-
-// import { revalidatePath } from "next/cache";
-// import { redirect } from "next/navigation";
-
 import { createClient } from "@/utils/supabase/server";
 
 export const registerUser = async ({
+  full_name,
   email,
   password,
   passwordConfirm,
 }: {
+  full_name: string;
   email: string;
   password: string;
   passwordConfirm: string;
@@ -20,10 +18,12 @@ export const registerUser = async ({
   const newUserSchema = z
     .object({
       email: z.string().email(),
+      full_name: z.string().min(1, "Full name is required"),
     })
     .and(passwordMatchSchema);
 
   const newUserValidation = newUserSchema.safeParse({
+    full_name,
     email,
     password,
     passwordConfirm,
@@ -32,16 +32,22 @@ export const registerUser = async ({
   if (!newUserValidation.success) {
     return {
       error: true,
-      message: newUserValidation.error.issues[0]?.message ?? "An error occured",
+      message:
+        newUserValidation.error.issues[0]?.message ?? "An error occurred",
     };
   }
 
-  // supabase authentication from here
+  // Supabase authentication from here
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        full_name,
+      },
+    },
   });
 
   if (error) {
