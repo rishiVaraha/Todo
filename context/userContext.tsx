@@ -43,10 +43,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      setUser(user);
       if (user) {
-        await fetchUserRole(user.id);
+        await fetchUserAndRole(user.id);
       } else {
+        setUser(null);
+        setUserRole("user");
         setIsLoading(false);
       }
     };
@@ -57,8 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
-        setUser(session.user);
-        fetchUserRole(session.user.id);
+        fetchUserAndRole(session.user.id);
       } else {
         setUser(null);
         setUserRole("user");
@@ -68,22 +68,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserRole = async (userId: string) => {
+  const fetchUserAndRole = async (userId: string) => {
     const { data, error } = await supabase
       .from("users")
-      .select("role")
+      .select("*, role")
       .eq("id", userId)
       .single();
 
     if (error) {
       toast({
         title: "Error",
-        description: "Could not fetch user role",
+        description: "Could not fetch user data",
         variant: "destructive",
       });
-    } else if (data) {
+      setIsLoading(false);
+      return;
+    }
+
+    if (data) {
+      setUser({
+        id: data.id,
+        email: data.email,
+        ...data,
+      });
       setUserRole(data.role as UserRole);
     }
+
     setIsLoading(false);
   };
 

@@ -12,13 +12,24 @@ export async function addTodo(formData: FormData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const { data: userData, error: userError } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", user?.id as string)
+    .single();
+
+  if (userError) throw new Error("Error fetching user data");
+
+  const userRole = userData?.role;
+  const userName = userData?.name;
 
   if (!user) throw new Error("User is not logged in");
 
   const { error } = await supabase.from("todos").insert({
     title: text,
     user_id: user.id,
-    user_name: user.user_metadata.full_name,
+    user_name: userName,
+    user_role: userRole,
   });
   if (error) throw new Error("Error adding todo");
 
