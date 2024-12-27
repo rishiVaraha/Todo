@@ -18,7 +18,16 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "../ui/button";
 
-export function NavUser({ user }: { user: any }) {
+interface User {
+  avatar_url: string;
+  name: string;
+  email: string;
+  user_metadata: {
+    name: string;
+  };
+}
+
+export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
   // console.log(user);
   return (

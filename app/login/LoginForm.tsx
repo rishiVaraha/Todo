@@ -63,10 +63,10 @@ export default function LoginForm() {
         // Redirect to the dashboard page
         router.push("/dashboard");
       }
-    } catch (error) {
+    } catch {
       setServerError("An unexpected error occurred. Please try again.");
     } finally {
-      setIsLoading(false); // Set loading to false when submission ends
+      setIsLoading(false);
     }
   };
 
